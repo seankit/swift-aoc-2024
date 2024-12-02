@@ -5,13 +5,11 @@ struct Day01: AdventDay {
   var data: String
 
   var split: (left: [Int], right: [Int]) {
-    var left: [Int] = []
-    var right: [Int] = []
-    data.split(separator: "\n").forEach {
-      let split = $0.split(separator: " ").compactMap { Int($0) }
-      left.append(split[0])
-      right.append(split[1])
+    let pairs = data.split(separator: "\n").map { line in
+      line.split(separator: " ").compactMap { Int($0) }
     }
+    let left = pairs.map { $0[0] }
+    let right = pairs.map { $0[1] }
     return (left, right)
   }
 
@@ -21,10 +19,7 @@ struct Day01: AdventDay {
     left = left.sorted()
     right = right.sorted()
     
-    let diff = zip(left, right).map { left, right in
-      abs(left - right)
-    }
-    
+    let diff = zip(left, right).map { abs($0 - $1) }
     return diff.reduce(0, +)
   }
 
@@ -32,13 +27,13 @@ struct Day01: AdventDay {
     let (left, right) = split
     
     var frequency: [Int: Int] = [:]
-    for value in right {
-      frequency[value, default: 0] += 1
+    right.forEach {
+      frequency[$0, default: 0] += 1
     }
     
     let mult = left.map {
-      let freq = frequency[$0] ?? 0
-      return $0 * freq
+      let frequency = frequency[$0] ?? 0
+      return $0 * frequency
     }
     
     return mult.reduce(0, +)
