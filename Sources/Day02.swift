@@ -1,5 +1,7 @@
 import Algorithms
 
+fileprivate typealias Level = Int
+
 fileprivate enum Direction {
   case increasing
   case decreasing
@@ -9,26 +11,26 @@ struct Day02: AdventDay {
   // Save your data in a corresponding text file in the `Data` directory.
   var data: String
 
-  var levels: [[Int]] {
+  var reports: [[Int]] {
     data.split(separator: "\n").map {
       $0.split(separator: " ").compactMap { Int($0) }
     }
   }
 
   func part1() -> Int {
-    levels.filter { $0.isValid }.count
+    reports.filter { $0.isSafe }.count
   }
 
   func part2() -> Int {
     let safeCount = part1()
 
-    let dampenedSafeCount = levels
-      .filter { !$0.isValid }
+    let dampenedSafeCount = reports
+      .filter { !$0.isSafe }
       .filter { level in
         level.indices.contains { index in
           var level = level
           level.remove(at: index)
-          return level.isValid
+          return level.isSafe
         }
     }.count
 
@@ -36,8 +38,8 @@ struct Day02: AdventDay {
   }
 }
 
-extension Array where Element == Int {
-  fileprivate var isValid: Bool {
+extension Array where Element == Level {
+  fileprivate var isSafe: Bool {
     var stack = self
     var current = stack.removeFirst()
 
