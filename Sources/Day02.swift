@@ -1,8 +1,8 @@
 import Algorithms
 
-fileprivate typealias Level = Int
+private typealias Level = Int
 
-fileprivate enum Direction {
+private enum Direction {
   case increasing
   case decreasing
 }
@@ -24,7 +24,8 @@ struct Day02: AdventDay {
   func part2() -> Int {
     let safeCount = part1()
 
-    let dampenedSafeCount = reports
+    let dampenedSafeCount =
+      reports
       .filter { !$0.isSafe }
       .filter { level in
         level.indices.contains { index in
@@ -32,7 +33,7 @@ struct Day02: AdventDay {
           level.remove(at: index)
           return level.isSafe
         }
-    }.count
+      }.count
 
     return safeCount + dampenedSafeCount
   }
@@ -44,7 +45,8 @@ extension Array where Element == Level {
     var current = stack.removeFirst()
 
     while !stack.isEmpty {
-      let range = direction == .decreasing ? (current-3...current-1) : (current+1...current+3)
+      let range =
+        direction == .decreasing ? (current - 3...current - 1) : (current + 1...current + 3)
       guard range.contains(stack.first!) else { return false }
       current = stack.removeFirst()
     }

@@ -15,27 +15,27 @@ struct Day01: AdventDay {
 
   func part1() -> Any {
     var (left, right) = split
-    
+
     left = left.sorted()
     right = right.sorted()
-    
+
     let diff = zip(left, right).map { abs($0 - $1) }
     return diff.reduce(0, +)
   }
 
   func part2() -> Any {
     let (left, right) = split
-    
+
     var frequency: [Int: Int] = [:]
     right.forEach {
       frequency[$0, default: 0] += 1
     }
-    
+
     let mult = left.map {
       let frequency = frequency[$0] ?? 0
       return $0 * frequency
     }
-    
+
     return mult.reduce(0, +)
   }
 }
