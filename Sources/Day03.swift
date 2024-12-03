@@ -14,6 +14,17 @@ struct Day03: AdventDay {
   // Replace this with your solution for the first part of the day's challenge.
   func part1() -> Any {
     let regex = /mul\(\d+,\d+\)/
+    
+    let mul = data.matches(of: regex).map { match in
+      let match = match.localizedLowercase
+      let digits = match.split(separator: ",")
+      let first = Int(digits.first?.trimmingPrefix("mul(") ?? "") ?? 0
+      let last = Int(digits.last?.trimmingSuffix(while: { $0 == ")" }) ?? "") ?? 0
+      
+      return first * last
+    }
+    
+    return mul.reduce(0, +)
   }
   
   // Replace this with your solution for the second part of the day's challenge.
