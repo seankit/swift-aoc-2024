@@ -14,7 +14,7 @@ struct Day07: AdventDay {
     }
   }
   
-  func calculateAllCombinations(_ nums: [Int]) -> Set<Int> {
+  func calculateAllCombinations(_ nums: [Int], shouldConcat: Bool = false) -> Set<Int> {
     func helper(_ index: Int, _ current: Int) -> Set<Int> {
       if index == nums.count {
         return [current]
@@ -23,6 +23,11 @@ struct Day07: AdventDay {
       var results: Set<Int> = []
       results = results.union(helper(index + 1, current + nums[index]))
       results = results.union(helper(index + 1, current * nums[index]))
+      
+      if shouldConcat {
+        let concat = "\(current)\(nums[index])"
+        results = results.union(helper(index + 1, Int(concat)!))
+      }
       return results
     }
     
@@ -42,8 +47,15 @@ struct Day07: AdventDay {
   }
 
   // Replace this with your solution for the second part of the day's challenge.
-//  func part2() -> Any {
-//    // Sum the maximum entries in each set of data
-//    entities.map { $0.max() ?? 0 }.reduce(0, +)
-//  }
+  func part2() -> Int {
+    equations.filter { equation in
+      let total = equation.keys.first!
+      guard let values = equation[total] else { return false }
+      
+      let allCombinations = calculateAllCombinations(values, shouldConcat: true)
+      return allCombinations.contains(total)
+    }
+    .map { $0.keys.first! }
+    .reduce(0, +)
+  }
 }
