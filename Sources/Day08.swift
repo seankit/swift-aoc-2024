@@ -60,7 +60,57 @@ struct Day08: AdventDay {
 
   // Replace this with your solution for the second part of the day's challenge.
   func part2() -> Int {
-    // Sum the maximum entries in each set of data
-    0
+    var grid = grid
+    let numRows = grid.count
+    let numColumns = grid[0].count
+    var coordinates: [Character: [Coordinate]] = [:]
+
+    for row in 0..<numRows {
+      for column in 0..<numColumns {
+        guard grid[row][column] != "." else { continue }
+        
+        let character = grid[row][column]
+        coordinates[character, default: []].append(Coordinate(row: row, column: column))
+      }
+    }
+    
+    for key in coordinates.keys {
+      guard let characterCoordinates = coordinates[key] else { continue }
+      for coordinate in characterCoordinates {
+        for otherCoordinate in characterCoordinates {
+          guard coordinate != otherCoordinate else { continue }
+          
+          let offset = Coordinate(row: coordinate.row - otherCoordinate.row, column: coordinate.column - otherCoordinate.column)
+          var currentAntinode = Coordinate(row: coordinate.row + offset.row, column: coordinate.column + offset.column)
+          
+          while currentAntinode.row >= 0,
+                currentAntinode.row < numRows,
+                currentAntinode.column >= 0,
+                currentAntinode.column < numColumns {
+            
+            grid[currentAntinode.row][currentAntinode.column] = "#"
+            
+            currentAntinode = Coordinate(row: currentAntinode.row + offset.row, column: currentAntinode.column + offset.column)
+          }
+        }
+      }
+    }
+    
+    func isValidCoordinate(_ coordinate: Coordinate) -> Bool {
+      coordinates.keys.contains(grid[coordinate.row][coordinate.column]) || grid[coordinate.row][coordinate.column] == "."
+    }
+    
+    // easy way out
+    let count = grid.map { row in
+      row.map { character in
+        character == "." ? 0 : 1
+      }.reduce(0, +)
+    }.reduce(0, +)
+    
+    for row in grid {
+      print(String(row))
+    }
+    
+    return count
   }
 }
